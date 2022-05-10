@@ -1,0 +1,264 @@
+#include <SoftwareSerial.h>
+
+SoftwareSerial hc06(4,5);
+
+boolean start = true; //stop voidloop variable
+volatile boolean e_stop = false; //ISR variable
+
+// defineer de pin ingangen
+const int stepPin = 9; 
+const int dirPin = 8; 
+
+String cmd="";
+float sensor_val=0;
+
+// variabelen van de noten
+int coun;
+bool dir=0;
+int del;
+int d=1912;
+int df=1805;
+int re= 1703;
+int ref=1607;
+int mi=1517;
+int fa=1431;
+int faf=1351;
+int sol= 1275;
+int solf=1203;
+int la=1136;
+int laf=1072;
+int si=1012;
+int d1=floor(d/2);
+int df1=floor(df/2);
+int re1=floor(re/2);
+int ref1=floor(ref/2);
+int mi1=floor(mi/2);
+int fa1=floor(1431/2);
+int faf1=floor(1351/2);
+int sol1= floor(1275/2);
+int solf1=floor(1203/2);
+int la1=floor(1136/2);
+int laf1=floor(1072/2);
+int si1=floor(1012/2);
+int mi2=floor(mi1/2);
+int mi0=mi*2;
+int sol0=sol*2;
+int re0=re*2;
+int laf0=laf*2;
+int la0=la*2;
+int fa0=fa*2;
+int use=180;
+int tempo=85;
+int oct=5;
+
+void setup() {
+ 
+   //Initialize Serial Monitor
+  Serial.begin(9600);
+  //Initialize Bluetooth Serial Port
+  hc06.begin(9600);
+  attachInterrupt(0, e_stop_ISR ,RISING);
+   // zet de pinnen als Outputs
+  pinMode(stepPin,OUTPUT); 
+  pinMode(dirPin,OUTPUT);
+}
+void loop() {
+oct=5;
+  while(hc06.available()>0){
+    cmd+=(char)hc06.read();
+  }
+
+  //Select function with cmd
+  if(cmd!=""){
+    Serial.print("Data opgevangen: ");
+    Serial.println(cmd);
+    // We expect ON or OFF from bluetooth
+    if(cmd=="ON"){
+        Serial.println("commando: on");
+        
+  if(start == true){
+
+    if(e_stop == false){
+    
+    for (int i = 0; i < 2; i++) { //FUR ELISE 
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(si,250);
+note(re1,250);
+note(d1,250);
+note(la,500);
+pa(250);
+note(d,250);
+note(mi,250);
+note(la,250);
+note(si,500);
+pa(250);
+note(mi,250);
+note(solf,250);
+note(si,250);
+note(d1,500);
+pa(250);
+note(mi,250);
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(si,250);
+note(re1,250);
+note(d1,250);
+note(la,500);
+pa(250);
+note(d,250);
+note(mi,250);
+note(la,250);
+note(si,500);
+pa(250);
+note(re,250);
+note(d1,250);
+note(si,250);
+if (int i = 0; i < 1) {
+  note(la,1000);
+  i = i+1;
+}
+else if (i >= 1) {
+  
+}
+}
+note(la,500);
+pa(250);
+note(si,250);
+note(d1,250);
+note(re1,250);
+
+for (int i = 0; i < 2; i++) {
+note(mi1,750);
+note(sol,250);
+note(fa1,250);
+note(mi1,250);
+note(re1,750);
+note(fa,250);
+note(mi1,250);
+note(re1,250);
+note(d1,750);
+note(mi,250);
+note(re1,250);
+note(d1,250);
+note(si,500);
+pa(250);
+note(mi,250);
+note(mi1,250);
+pa(250);
+pa(250);
+note(mi1,250);
+note(mi2,250);
+pa(250);
+pa(250);
+note(ref1,250);
+note(mi,250);
+pa(250);
+note(ref1,250);
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(si,250);
+note(re1,250);
+note(d1,250);
+note(la,500);
+pa(250);
+note(d,250);
+note(mi,250);
+note(la,250);
+note(si,500);
+pa(250);
+note(mi,250);
+note(faf,250);
+note(si,250);
+note(d1,500);
+pa(250);
+note(mi,250);
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(ref1,250);
+note(mi1,250);
+note(si,250);
+note(re1,250);
+note(d1,250);
+note(la,500);
+pa(250);
+note(d,250);
+note(mi,250);
+note(la,250);
+note(si,500);
+pa(250);
+note(re,250);
+note(d1,250);
+note(si,250);
+
+if (int i = 0; i < 1) {
+  note(la,500);
+  pa(250);
+  note(si,250);
+  note(d1,250);
+  note(re1,250);
+  i = i+1;
+}
+
+else if (i >= 1) {
+note(d1,1000);
+}
+}
+ 
+   
+
+
+}
+
+  }
+ 
+  else{
+    Serial.println("NOODSTOP!!");
+    start = false;
+  }
+  ////////////////////::
+ 
+}
+  }
+ hc06.print(sensor_val);
+  delay(100);
+  
+}
+void note(int num,long dur) {
+  del=(num*oct)/10;
+  dir=!dir;
+ digitalWrite(dirPin,dir);
+  coun=floor((dur*5*tempo)/del);
+  for(int x = 0; x < coun; x++) {
+    digitalWrite(stepPin,HIGH);
+    delayMicroseconds(del);
+    digitalWrite(stepPin,LOW);
+    delayMicroseconds(del);
+  }
+
+}
+
+void pa(int durp){
+  int ker=floor(durp/100)*tempo;
+delay(ker);
+  
+  }
+  void e_stop_ISR(void){ // ISR takes no parameters and returns no values
+    detachInterrupt(0); // makes button bouncing unnecessary
+    e_stop = !e_stop;// toggle the current value of the e_stop variable
+    exit(0);
+    start = true; //stop voidloop variable
+    e_stop = false; //ISR variable
+    
+  }
+  
